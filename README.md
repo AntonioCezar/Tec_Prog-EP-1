@@ -176,3 +176,5 @@ No Pull Request, explique de forma simples:
 - como testar, quando fizer sentido.
 
 Confira se o codigo roda e se os arquivos alterados sao apenas os que fazem parte da tarefa.
+
+`Instrucoes retiradas e modificadas do repositorio do imejr`
