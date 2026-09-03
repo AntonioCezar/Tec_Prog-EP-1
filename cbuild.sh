@@ -2,8 +2,6 @@
 
 # Aqui jaz o código principal para o funcionamento do programa.
 
-echo ""
-
 if [[ "$#" -eq 0 ]]; then
   echo "#------------------------------------------------#"
   echo "  Seja bem-vindo ao cbuild, seu compilador de c!"
@@ -24,7 +22,7 @@ comando_executado="$1" # parâmetro colocado pelo usuário
 
 case "$comando_executado" in
     "build" | "Build" | "b")
-        echo "teste entrou no build"
+        ./cbuild_funcs/build.sh "$2" "$3"
         ;;
     "run" | "Run" | "r")
         echo "teste entrou no run"
@@ -33,7 +31,7 @@ case "$comando_executado" in
         echo "teste entrou no info"
         ;;
     "")
-        echo ""
+        echo "casoteste"
         ;;
     *)
         echo "Comando Desconhecido"
