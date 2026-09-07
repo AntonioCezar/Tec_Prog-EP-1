@@ -11,7 +11,7 @@ if [[ "$#" -eq 0 ]]; then
   echo ""
   echo "build [b] - Compila todas as mudanças detectadas do seu programa .c"
   echo "clean [c] - Limpa os artefatos da compilação"
-  echo "clean all - Limpa os artefatos da compilação, incluindo os logs"
+  echo "clean [c] all - Limpa os artefatos da compilação, incluindo os logs"
   echo "run [r] - Roda seu programa .c a partir do arquivo compilado no comando build"
   echo "info [i] - Exibe algumas informações importantes sobre o seu programa"
   echo ""
