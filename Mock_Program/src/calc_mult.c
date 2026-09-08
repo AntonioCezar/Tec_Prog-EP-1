@@ -3,3 +3,7 @@
 int mult(int a, int b){
   return (a * b);
 }
+
+char isEq(int a, int b){
+  if (a == b) return 'F'; else return 'T';
+}
