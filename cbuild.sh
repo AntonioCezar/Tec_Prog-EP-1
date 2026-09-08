@@ -13,6 +13,7 @@ if [[ "$#" -eq 0 ]]; then
   echo "clean [c] - Limpa os artefatos da compilação"
   echo "clean all [c a] - Limpa os artefatos da compilação, incluindo os logs"
   echo "run [r] - Roda seu programa .c a partir do arquivo compilado no comando build"
+  echo "rebuild [rb] - re-compila seu programa limpando todos os arquivos temp"
   echo "info [i] - Exibe algumas informações importantes sobre o seu programa"
   echo ""
   echo "Escreva: cbuild (comando) [opções] para executar os comandos desejados"
@@ -30,7 +31,10 @@ case "$comando_executado" in
         ./cbuild_funcs/clean.sh "$2"
         ;; 
     "run" | "Run" | "r")
-        echo "teste entrou no run"
+        ./cbuild_funcs/run.sh
+        ;;
+    "rb" | "rebuild" | "Rebuild" | "ReBuild")
+        ./cbuild_funcs/rebuild.sh "$2" "$3"
         ;;
     "info" | "Info" | "i")
         echo "teste entrou no info"
