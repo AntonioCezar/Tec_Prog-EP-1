@@ -29,7 +29,7 @@ echo "" >> ./$logfile
 if [[ $1 == "Compilação bem-sucedida" ]]; then
     echo "Arquivo de Compilação '$info_adicional' Adicionado na Pasta build" >> ./$logfile
 
-elif [[ -n $texto_erro ]]; then
+elif [[ -n $info_adicional ]]; then
     echo "---------------" >> ./$logfile
     echo "Erro detectado:" >> ./$logfile
     echo "---------------" >> ./$logfile

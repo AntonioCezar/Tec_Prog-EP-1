@@ -17,7 +17,7 @@ clean() {
     fi
 }
 
-cleanAll() {
+clean_all() {
     #apaga os arquivos de build e os arquivos temp
     clean
 
@@ -38,7 +38,7 @@ clean_mode="$1"
 
 case "$clean_mode" in
     "ALL" | "AAl" | "AlL" | "All" | "aLL"| "aLl" | "alL" | "all" )
-        cleanAll
+        clean_all
         ;;
     "" )
         clean
