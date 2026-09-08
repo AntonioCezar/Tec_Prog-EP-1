@@ -2,11 +2,11 @@
 
 # aqui jaz a função de criação de logs
 
+# fazer com que seja possível passar varias infos para o log
+
 logdir=./logs
 
-if [[ ! -d $logdir ]]; then
-    mkdir logs
-fi
+mkdir -p ./logs
 
 data_atual=$(date '+%Y-%m-%d')
 hora_atual=$(date '+%H-%M-%S')
