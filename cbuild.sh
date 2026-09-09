@@ -2,6 +2,46 @@
 
 # Aqui jaz o código principal para o funcionamento do programa.
 
+#Deixa o runtime mais legível
+get_runtime() 
+{
+    local runtime_ns=$1
+
+    local all_sec=$(( runtime_ns / 1000000000 ))
+    local milisec=$(( runtime_ns / 1000000 % 1000 ))
+
+    local min=$(( all_sec / 60  ))
+    local sec=$(( all_sec % 60 ))
+
+    if [[ $min -gt 0 ]]; then
+        printf "%dm%ds%03dms" "$min" "$sec" "$milisec"
+    else
+        printf "%ds%03dms" "$sec" "$milisec"
+fi
+}
+
+#Executa os comandos e registra o runtime
+run_with_timing()
+{
+    local log_label="$1"                                #Armazena o primeiro parâmetro. Exemplo: "Build", "Clean"
+    shift                                               #"Pula apenas o primeiro parâmetro", por exemplo:                                   
+
+    local start=$(date +%s%N)                           #Registra o início da execução
+    "$@"                                                #Executa o parâmetro que sobrou como se fosse um comando
+
+    local exit_code=$?
+    local end=$(date +%s%N)                             #Registra o fim da execução
+
+    local runtime_ns=$(( (end - start) ))               #Armazena o runtime
+    local runtime=$(get_runtime "$runtime_ns")          #Formata o runtime
+
+    ./cbuild_funcs/logs.sh "$log_label" "$exit_code" "$comando_user" "$runtime"
+
+    return "$exit_code"
+}
+
+export -f get_runtime
+
 export command_log_dir=$(mktemp -d) # cria uma pasta temporaria global para o resultado das execuções dos comandos
 
 trap 'rm -rf "$command_log_dir"' EXIT # deleta a pasta temporaria de resultados dos comandos
@@ -33,20 +73,16 @@ comando_user="$0 $*"
 
 case "$comando_executado" in
     "build" | "Build" | "b")
-        ./cbuild_funcs/build.sh "$2" "$3"
-        ./cbuild_funcs/logs.sh "Build" $? "$comando_user"
+        run_with_timing "Build" ./cbuild_funcs/build.sh "$2" "$3"
         ;;
     "clean" | "Clean" | "c" )
-        ./cbuild_funcs/clean.sh "$2"
-        ./cbuild_funcs/logs.sh "Clean" $? "$comando_user"
+        run_with_timing "Clean" ./cbuild_funcs/clean.sh "$2"
         ;; 
     "run" | "Run" | "r")
-        ./cbuild_funcs/run.sh
-        ./cbuild_funcs/logs.sh "Run" $? "$comando_user"
+        run_with_timing "Run" ./cbuild_funcs/run.sh
         ;;
     "rb" | "rebuild" | "Rebuild" | "ReBuild")
-        ./cbuild_funcs/rebuild.sh "$2" "$3"
-        ./cbuild_funcs/logs.sh "Rebuild" $? "$comando_user"
+        run_with_timing "Rebuild" ./cbuild_funcs/rebuild.sh "$2" "$3"
         ;;
     "info" | "Info" | "i")
         echo "teste entrou no info"
