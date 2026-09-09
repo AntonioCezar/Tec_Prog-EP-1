@@ -1,0 +1,21 @@
+
+=============================================================
+Data de criação deste log: 2026-09-09
+Hora de criação deste log: 13:36:40
+=============================================================
+
+*************************************************************
+
+Comando executado: 'Rebuild'
+
+Resultado da Operação: 'Operação Bem-Sucedida'
+
+Comando Digitado pelo Usuário: './cbuild.sh rebuild Mock_Program teste'
+
+*************************************************************
+
+Retorno do Comando Rebuild:
+
+Não Há Nenhum Arquivo Na Pasta './build' Para Apagar!
+O executável 'teste' foi criado com sucesso!
+
