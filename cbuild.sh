@@ -50,6 +50,7 @@ case "$comando_executado" in
         ;;
     "info" | "Info" | "i")
         echo "teste entrou no info"
+        ./cbuild_funcs/info.sh
         ;;
     "")
         ;;

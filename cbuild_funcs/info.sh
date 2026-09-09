@@ -19,6 +19,13 @@ compilação e execução. Quando uma informação ainda não existir, como a da
 echo ""
 
 info() {
-    # encontra todos os arquivos que terminam em .c e  .h e calcula a soma de todas as linhas de código presentes nesses arquivos
-    find . -type f \( -name "*.c" -o -name "*.h" \) | xargs wc -l
+    # encontra e calcula a quatidade de arquivos do projeto 
+    qtd_arquivos_proj=$(find . -type f \( -name "*.c" -o -name "*.h" \) | wc -l)
+    echo "  Quantidade de arquivos do projeto: $qtd_arquivos_proj"
+
+    # encontra todos os arquivos que terminam em .c e  .h e calcula a soma de todas as linhas de código presentes nesses arquivos, sem exceção
+    qtd_linhas=$(find . -type f \( -name "*.c" -o -name "*.h" \) | xargs wc -l | tail -n 1 | awk '{print $1}')
+    echo "  Quantidade absoluta de linhas de código: $qtd_linhas"
+    
 }
+info
