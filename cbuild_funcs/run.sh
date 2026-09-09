@@ -2,7 +2,24 @@
 
 # aqui jaz a função run que roda o programa que foi compilado pelo build
 
-out_text=$(mktemp -p "$command_log_dir" 03_run.XXXXXX)
+#Função que formata a variavel runtime
+get_runtime() {
+  local runtime_ns=$1
+
+  local all_sec=$(( runtime_ns / 1000000000 ))
+  local milisec=$(( runtime_ns / 1000000 % 1000 ))
+
+  local min=$(( all_sec / 60  ))
+  local sec=$(( all_sec % 60 ))
+
+  if [[ $min -gt 0 ]]; then
+    printf "%dm%ds%03ds" "$min" "$sec" "$milisec"
+  else
+    printf "%ds%03ds" "$sec" "$milisec"
+  fi
+}
+
+out_text=$(mktemp -p "$command_log_dir" 02_build.XXXXXX)
 
 build_dir=$(find "./" -type d -name "build")
 
@@ -21,13 +38,26 @@ if [[ -z "$run_file" ]]; then
   exit 1
 fi
 
-#executa o arquivo, se houver erro, manda para o $out_text
+#Registra o início da execução
+start=$(date +%s%N)
+
+#Executa o arquivo, se houver erro, manda para o $out_text
 ./"$run_file" 2>> "$out_text"
 exit_code=$?
 
+#Registra o fim da execução
+end=$(date +%s%N)
+
+#Armazena runtime em segundos+nanossegundos 
+runtime_ns=$(( (end - start) ))
+
+#Armazena variável runtime mais legível
+runtime=$(get_runtime "$runtime_ns")
+
 if [[ $exit_code -eq 0 ]]; then
   echo "Programa Executado Com Sucesso!" >> $out_text
-  echo "Execução bem-sucedida"
+  echo "Tempo de execução: $runtime" >> $out_text
+  echo "Execução bem-sucedida."
   exit 0
 
 elif [[ $exit_code -eq 126 ]]; then
