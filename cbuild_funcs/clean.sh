@@ -61,11 +61,9 @@ clean_mode="${1,,}"
 case "$clean_mode" in
     "all" )
         cleanAll
-        #aqui falta registrar um log
         ;;
     "" )
         clean
-        #aqui falta registrar um log
         ;;
     *)
         echo "O parâmetro -$clean_mode- não existe."
