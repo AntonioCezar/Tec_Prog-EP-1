@@ -34,6 +34,8 @@ echo "Resultado da Operação: '$status'"
 echo ""
 echo "Comando Digitado pelo Usuário: '$3'"
 echo ""
+echo "Tempo de Execução do Comando $1: '$4'"
+echo ""
 echo "*************************************************************"
 echo ""
 } >> $logdir/$logfile
