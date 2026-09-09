@@ -2,7 +2,7 @@
 
 # aqui jaz a função run que roda o programa que foi compilado pelo build
 
-out_text=$(mktemp -p "$command_log_dir" 02_build.XXXXXX)
+out_text=$(mktemp -p "$command_log_dir" 03_run.XXXXXX)
 
 build_dir=$(find "./" -type d -name "build")
 
