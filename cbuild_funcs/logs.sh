@@ -2,40 +2,56 @@
 
 # aqui jaz a função de criação de logs
 
-# fazer com que seja possível passar varias infos para o log
+mkdir -p ./logs
 
 logdir=./logs
-
-mkdir -p ./logs
 
 data_atual=$(date '+%Y-%m-%d')
 hora_atual=$(date '+%H-%M-%S')
 hora_atual_format=$(date '+%H:%M:%S')
 
-info_adicional=$(cat)
-
-cd logs
 logfile=cbuild_${data_atual}_${hora_atual}.log
-touch $logfile
-echo "" >> ./$logfile
-echo "=============================================================" >> ./$logfile
-echo "Data de crição deste log: ${data_atual}" >> ./$logfile
-echo "Hora de crição deste log: ${hora_atual_format}" >> ./$logfile
-echo "=============================================================" >> ./$logfile
-echo "" >> ./$logfile
-echo "Estado da Compilação: $1" >> ./$logfile
-echo "" >> ./$logfile
+touch "$logdir/$logfile"
 
-if [[ $1 == "Compilação bem-sucedida" ]]; then
-    echo "Arquivo de Compilação '$info_adicional' Adicionado na Pasta build" >> ./$logfile
-
-elif [[ -n $info_adicional ]]; then
-    echo "---------------" >> ./$logfile
-    echo "Erro detectado:" >> ./$logfile
-    echo "---------------" >> ./$logfile
-    echo "" >> ./$logfile
-    echo "$info_adicional" >> ./$logfile
-
-else 
-    echo "Sem Informações Adicionais" >> ./$logfile
+if [[ ! $2 -eq 0 ]]; then
+    status="Operação Mal-Sucedida"
+else
+    status="Operação Bem-Sucedida"
 fi
+
+{
+echo "" 
+echo "============================================================="
+echo "Data de criação deste log: ${data_atual}"
+echo "Hora de criação deste log: ${hora_atual_format}"
+echo "============================================================="
+echo ""
+echo "*************************************************************"
+echo ""
+echo "Comando executado: '$1'"
+echo ""
+echo "Resultado da Operação: '$status'"
+echo ""
+echo "Comando Digitado pelo Usuário: '$3'"
+echo ""
+echo "*************************************************************"
+echo ""
+} >> $logdir/$logfile
+
+{
+echo "Retorno do Comando $1:"
+echo ""
+shopt -s nullglob # evita que o cat envie a path como texto para o log
+cat "$command_log_dir"/* < /dev/null # lê e armazena no log todos os textos dos erros nos comandos
+echo ""
+} >> $logdir/$logfile
+
+#elif [[ "$1" == "Clean" ]]; then
+    #{
+   # echo "Retorno do Comando Clean:"
+    #echo ""
+    #shopt -s nullglob # evita que o cat envie a path como texto para o log
+    #cat "$command_log_dir"/* < /dev/null # lê e armazena no log todos os textos dos erros nos comandos
+    #echo ""
+    #} >> $logdir/$logfile
+#fi

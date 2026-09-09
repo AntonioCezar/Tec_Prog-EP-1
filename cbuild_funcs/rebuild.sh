@@ -6,6 +6,6 @@ clean_command=$(find "./" -type f -iname "clean.sh")
 
 build_command=$(find "./" -type f -iname "build.sh")
 
-./$clean_command
+./$clean_command || exit 1
 
-./$build_command "$1" "$2"
+./$build_command "$1" "$2" || exit 1
