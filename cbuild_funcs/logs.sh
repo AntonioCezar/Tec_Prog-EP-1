@@ -13,10 +13,10 @@ hora_atual_format=$(date '+%H:%M:%S')
 logfile=cbuild_${data_atual}_${hora_atual}.log
 touch "$logdir/$logfile"
 
-if [[ ! $2 -eq 0 ]]; then
-    status="Operação Mal-Sucedida"
-else
+if [[ $2 -eq 0 ]]; then
     status="Operação Bem-Sucedida"
+else
+    status="Operação Mal-Sucedida"
 fi
 
 {

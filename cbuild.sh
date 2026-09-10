@@ -2,6 +2,8 @@
 
 # Aqui jaz o código principal para o funcionamento do programa.
 
+# ainda tem que adicionar uma procura profunda no cbuild, por enquanto ele assume que o usuário está na pasta que o cbuild está localizado, mas pode ser que não esteja, nesse caso devemos achar os comandos de forma recursiva.
+
 #Deixa o runtime mais legível
 get_runtime() 
 {
@@ -42,6 +44,10 @@ run_with_timing()
 
 export -f get_runtime
 
+export verbose_mode=false
+
+export debug_mode=false
+
 export command_log_dir=$(mktemp -d) # cria uma pasta temporaria global para o resultado das execuções dos comandos
 
 trap 'rm -rf "$command_log_dir"' EXIT # deleta a pasta temporaria de resultados dos comandos
@@ -72,21 +78,29 @@ comando_executado="$1" # parâmetro colocado pelo usuário
 comando_user="$0 $*"
 
 case "$comando_executado" in
-    "build" | "Build" | "b")
-        run_with_timing "Build" ./cbuild_funcs/build.sh "$2" "$3"
+    "build" | "Build" | "b" | "B")
+        run_with_timing "Build" ./cbuild_funcs/build.sh "$2" "$3" 
         ;;
-    "clean" | "Clean" | "c" )
+    "clean" | "Clean" | "c" | "C" )
         run_with_timing "Clean" ./cbuild_funcs/clean.sh "$2"
         ;; 
-    "run" | "Run" | "r")
+    "run" | "Run" | "r" | "R")
         run_with_timing "Run" ./cbuild_funcs/run.sh
         ;;
-    "rb" | "rebuild" | "Rebuild" | "ReBuild")
+    "rb" | "rebuild" | "Rebuild" | "ReBuild" | "RB")
         run_with_timing "Rebuild" ./cbuild_funcs/rebuild.sh "$2" "$3"
         ;;
-    "info" | "Info" | "i")
+    "info" | "Info" | "i" | "I")
         echo "teste entrou no info"
         ./cbuild_funcs/info.sh
+        ;;
+    "verboso" | "Verboso" | "v" | "V")
+        echo "teste entrou no verbose"
+        source ./cbuild_modes/verbose.sh "$2"
+        ;;
+    "debug" | "Debug" | "d" | "D")
+        echo "teste entrou no verbose"
+        source ./cbuild_modes/debug.sh "$2"
         ;;
     "")
         ;;
