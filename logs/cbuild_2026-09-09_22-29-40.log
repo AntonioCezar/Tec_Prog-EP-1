@@ -1,0 +1,22 @@
+
+=============================================================
+Data de criação deste log: 2026-09-09
+Hora de criação deste log: 22:29:40
+=============================================================
+
+*************************************************************
+
+Comando executado: 'Build'
+
+Resultado da Operação: 'Operação Mal-Sucedida'
+
+Comando Digitado pelo Usuário: './cbuild.sh b /home/jeffersonjr/BCC/teste/'
+
+Tempo de Execução do Comando Build: '0s006ms'
+
+*************************************************************
+
+Retorno do Comando Build:
+
+Nome Do Executável Não Especificado!
+

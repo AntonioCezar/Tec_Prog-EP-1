@@ -26,6 +26,24 @@ info() {
     # encontra todos os arquivos que terminam em .c e  .h e calcula a soma de todas as linhas de código presentes nesses arquivos, sem exceção
     qtd_linhas=$(find . -type f \( -name "*.c" -o -name "*.h" \) | xargs wc -l | tail -n 1 | awk '{print $1}')
     echo "  Quantidade absoluta de linhas de código: $qtd_linhas"
-    
+
+    # verifica se existe uma pasta build 
+    if [[ ! -d "./build" ]]; then
+        echo "Nenhum arquivo foi compilado"
+
+    # verifica se a pasta build possui algum arquivo 
+    elif [[ -z "$(find ./build -mindepth 1 -maxdepth 1 -print -quit)" ]]; then
+        echo "Não há arquivo compilado"
+
+    else 
+        # encontra o arquivo executavel na pasta build 
+        executavel=$(find ./build -maxdepth 1 -type f -executable | head -n 1)
+        tamanho_executavel=$(stat -c %s $executavel)
+        data_compilacao=$(stat -c %y $executavel)
+
+        echo "Tamanho do executável: $tamanho_executavel bytes"
+        echo "Data de compilação: $data_compilacao"
+        
+     fi
 }
 info
