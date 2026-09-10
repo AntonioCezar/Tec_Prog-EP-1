@@ -91,7 +91,6 @@ case "$comando_executado" in
         run_with_timing "Rebuild" ./cbuild_funcs/rebuild.sh "$2" "$3"
         ;;
     "info" | "Info" | "i" | "I")
-        echo "teste entrou no info"
         ./cbuild_funcs/info.sh
         ;;
     "verboso" | "Verboso" | "v" | "V")
