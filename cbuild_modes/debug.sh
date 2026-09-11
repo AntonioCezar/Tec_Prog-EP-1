@@ -29,7 +29,26 @@ esac
 
 #ver se o modo verboso esté ativado e está tentando ativar o modo debug
 if [[ $verbose_mode == "true" && $ativou == "true" ]]; then
-    echo "desative o modo verboso para ativar o modo debug"
+    read -p "você deseja desativar o modo verboso para ativar o modo debug?(s/n)" resposta
+        case "$resposta" in
+            "s" | "S" | "y" | "Y" | "sim" | "Sim" | "yes" | "Yes" )
+                $verbose_mode == "false" #desativa o modo verboso
+                $debug_mode == "true" #ativa o modo debug
+                ;;
+            "")
+            "n" | "N" | "no" | "No" | "não" | "Não" | "nao" | "Nao" )
+                echo "operação cancelada: você não pode ativar o modo debug com o modo verboso ativado"
+                exit 1
+                ;;
+            "")
+                echo "operação cancelada"
+                exit 1
+                ;;
+            *)
+                echo "esse comando não existe, digite um comando válido" 
+                exit 1
+                ;;
+    esac
     exit 1
 elif [[ $ativou = "true" ]]; then
     $verbose_mode=true
