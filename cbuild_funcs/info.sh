@@ -2,30 +2,35 @@
 
 # aqui jaz a função info que mostra informações importantes sobre o cbuild e o programa do usuário
 
-echo "--------------------------------------------"
-echo "  Informações Adicionais Sobre Os Comandos  "
-echo "--------------------------------------------"
-echo ""
-echo "Adicionar informações uteis para o uso do programa aqui"
-echo ""
-echo "********************************************"
-echo ""
-echo "====================================="
-echo " Estatísticas sobre a execução atual "
-echo "====================================="
-echo ""
-echo "aqui vai ter a quantidade de arquivos, linhas de código, tamanho do executável e datas da última 
-compilação e execução. Quando uma informação ainda não existir, como a data de uma compilação que nunca ocorreu, a ferramenta deverá indicar explicitamente que o dado está indisponível. O critério utilizado para contabilizar linhas de código deverá ser definido pelo grupo e aplicado de forma consistente. O relatório deverá informar se linhas vazias, comentários, diretivas de pré-processamento e outros casos particulares são ou não contabilizados. "
-echo ""
-
 info() {
+    
+    echo ""
+    echo ""
+    echo "================================================================"
+    echo "               CBUILD - PAINEL DE INFORMAÇÕES                   "
+    echo "================================================================"
+    echo ""
+    echo " Este painel exibe o status atual do seu projeto em C."
+    echo ""
+
     # encontra e calcula a quatidade de arquivos do projeto 
+
+    echo "------------------- MÉTRICAS DO CÓDIGO ------------------------"
+    echo ""
+
     qtd_arquivos_proj=$(find . -type f \( -name "*.c" -o -name "*.h" \) | wc -l)
     echo "Quantidade de arquivos do projeto: $qtd_arquivos_proj"
 
     # encontra todos os arquivos que terminam em .c e  .h e calcula a soma de todas as linhas de código presentes nesses arquivos, sem exceção
     qtd_linhas=$(find . -type f \( -name "*.c" -o -name "*.h" \) | xargs wc -l | tail -n 1 | awk '{print $1}')
     echo "Quantidade absoluta de linhas de código: $qtd_linhas"
+
+    # geração do status de compilação
+
+    echo ""
+    echo ""
+    echo "------------------- STATUS DE COMPILAÇÃO ----------------------"
+    echo ""
 
     # verifica se existe uma pasta build 
     if [[ ! -d "./build" ]]; then
@@ -39,7 +44,7 @@ info() {
         # encontra o arquivo executavel na pasta build 
         executavel=$(find ./build -maxdepth 1 -type f -executable | head -n 1)
         tamanho_executavel=$(stat -c %s $executavel)
-        data_compilacao=$(stat -c %y $executavel)
+        data_compilacao=$(date -r "$executavel" "+%d/%m/%Y às %H:%M:%S")
 
         echo "Tamanho do executável: $tamanho_executavel bytes"
         echo "Data de compilação: $data_compilacao"
@@ -47,6 +52,12 @@ info() {
      fi
 
     # data de execução do arquivo presente no projeto 
+
+    echo ""
+    echo ""
+    echo "----------------- HISTÓRICO DE EXECUÇÂO ---------------------"
+    echo ""
+
     # verifica se a pasta logs existe no diretório
     if [[ ! -d "./logs" ]]; then 
         echo "Nenhum comando foi executado"
@@ -63,10 +74,15 @@ info() {
             echo "Não há registro de execução"
         
         else 
-            data_exec=$(stat -c %y $log_run)
+            data_exec=$(date -r "$log_run" "+%d/%m/%Y às %H:%M:%S")
             echo "Data de execução: $data_exec"
         fi
     fi
+
+    echo ""
+    echo "================================================================"
+    echo ""
+    echo ""
 
 }
 info
