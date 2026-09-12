@@ -44,9 +44,16 @@ run_with_timing()
 
 export -f get_runtime
 
-export verbose_mode=false
+export config_file="./.cbuild_config"
 
-export debug_mode=false
+if [[ -f "$config_file" ]]; then
+    source "$config_file"
+else
+    {
+    echo "export verbose_mode=false"
+    echo "export debug_mode=false"
+    } > "$config_file"
+fi
 
 export command_log_dir=$(mktemp -d) # cria uma pasta temporaria global para o resultado das execuções dos comandos
 
@@ -60,12 +67,12 @@ if [[ "$#" -eq 0 ]]; then
     echo ""
     echo "Para utilizar o cbuild selecione um dos nossos comandos:"
     echo ""
-    echo "build [b] - Compila todas as mudanças detectadas do seu programa .c"
+    echo "build [b] <Diretório> <Escolha um Nome para o Executável> - Compila todas as mudanças detectadas do seu programa .c"s
     echo "clean [c] - Limpa os artefatos da compilação"
-    echo "clean [c] all - Limpa os artefatos da compilação, incluindo os logs"
+    echo "clean [c] all - Limpa os artefatos da compilação e todos os logs"
     echo "run [r] - Roda seu programa .c a partir do arquivo compilado no comando build"
-    echo "rebuild [rb] - re-compila seu programa limpando todos os arquivos temp"
-    echo "info [i] - Exibe algumas informações importantes sobre o seu programa"
+    echo "rebuild [rb] <Diretório> <Escolha um Nome para o Executável> - re-compila seu programa limpando todos os arquivos temp e cria um novo arquivo de execução"
+    echo "info [i] <Diretório> - Exibe algumas informações importantes sobre o seu programa"
     echo ""
     echo "Escreva: cbuild (comando) [opções] para executar os comandos desejados"
     echo ""
@@ -91,20 +98,18 @@ case "$comando_executado" in
         run_with_timing "Rebuild" ./cbuild_funcs/rebuild.sh "$2" "$3"
         ;;
     "info" | "Info" | "i" | "I")
-        ./cbuild_funcs/info.sh
+        run_with_timing "Info" ./cbuild_funcs/info.sh "$2"
         ;;
-    "verboso" | "Verboso" | "v" | "V")
-        echo "teste entrou no verbose"
-        source ./cbuild_modes/verbose.sh "$2"
+    "verboso" | "Verboso" | "v" | "V" | "verbose" | "Verbose")
+        run_with_timing "Verboso" ./cbuild_modes/verbose.sh "$2"
         ;;
     "debug" | "Debug" | "d" | "D")
-        echo "teste entrou no verbose"
-        source ./cbuild_modes/debug.sh "$2"
+        run_with_timing "Debug" ./cbuild_modes/debug.sh "$2"
         ;;
     "")
         ;;
     *)
-        echo "Comando Desconhecido"
+        echo "O Comando "$comando_executado" Não Faz Parte Dos Comandos Incluidos No Cbuild"
         ;;
 esac
 

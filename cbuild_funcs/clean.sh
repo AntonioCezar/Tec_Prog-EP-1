@@ -4,8 +4,6 @@
 #clean() apaga os arquivos de build
 #cleanAll() apaga os arquivos de build e apaga os logs
 
-#Obs.:
-#falta registrar os logs
 
 #cria arquivo temp de erro
 out_text=$(mktemp -p "$command_log_dir" 01_clean.XXXXXX)

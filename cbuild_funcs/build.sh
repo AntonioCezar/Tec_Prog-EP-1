@@ -2,8 +2,6 @@
 
 # aqui jaz a função build completa
 
-# da para usar as variáveis arq_mod e file_detec para mandar informações específicas para os logs ou o modo debug e verboso
-
 # e se tiver mais de uma pasta com arquivos de mesmo nome?
 
 # --- Error handling e logs ---
@@ -20,6 +18,13 @@ deep_compiler() {
 
     mkdir -p ./build/build_parts
 
+    if [[ $verbose_mode == true ]]; then 
+        echo "Programa começou a compilar os arquivos"
+        echo ""
+        echo "======== Compilação em Andamento ========"
+        echo ""
+    fi
+
     while IFS= read -r file; do # o IFS junto com o read -r deixam o texto passado para file da exata forma que ele foi passado para evitar erros
 
         if [[ ! -z $file ]]; then # se existe um file .c adiciona no contador
@@ -29,11 +34,25 @@ deep_compiler() {
         local formated_file=$(basename "$file" .c) # formata o nome do arquivo para procurar o correspondente .o
 
         if [[ "$file" -nt "./build/build_parts/${formated_file}.o" ]]; then # vê se o arquivo de compilação já existe e, se sim, se o arquivo .c é mais novo que o arquivo de compilação para só compilar o que foi modificado.
+
+            if [[ $debug_mode == true ]]; then 
+                echo "Debug: Programa concluiu que $file é mais novo que seu arquivo de compilação." 
+            fi
+
             gcc -c "$file" -o "./build/build_parts/${formated_file}.o" 2>> "$out_text" || return 2 # compila cada file em um arquivo.o, se der erro retorna 2
             arq_mod=$((arq_mod + 1))
+
+            if [[ $verbose_mode == true ]]; then 
+                echo "Programa compilou $file com o comando 'gcc -c $file -o ./build/build_parts/${formated_file}.o'"
+            fi
+        else
+            if [[ $debug_mode == true ]]; then 
+                echo "Debug: Programa concluiu que $file já está atualizado e pulou sua compilação." 
+            fi
         fi
 
     done
+    
 
     if [[ $file_detec -eq 0 ]]; then # detecta se existem ou não files .c
         return 4
@@ -43,9 +62,24 @@ deep_compiler() {
         return 3
     fi
 
+    if [[ $debug_mode == true ]]; then 
+        echo "Debug: Programa testou se existem arquivos .c e se houveram mudanças neles."
+    fi
+
     out_files=$(find "./build/build_parts" -type f -iname "*.o" | xargs -n 1 | tr '\n' ' ') # procura todos os arquivos .o que acabou de compilar no while
 
     gcc $out_files -o "./build/$out_name" 2>> "$out_text" || return 2 # compila todos em um só output com o nome escolhido pelo usuário, se der erro retorna 2
+
+    if [[ $verbose_mode == true ]]; then 
+        echo "Programa compilou $file com o comando 'gcc $out_files -o ./build/$out_name'"
+    fi
+
+    if [[ $verbose_mode == true ]]; then 
+        echo "Programa terminou de compilar os arquivos .c"
+        echo ""
+        echo "======== Compilação Finalizada ========="
+        echo ""
+    fi
 
 }
 
@@ -60,6 +94,10 @@ if [[ ! -d $program_folder ]]; then # checagem para ver se o dir passado pelo us
     exit 1
 fi
 
+if [[ $debug_mode == true ]]; then 
+    echo "Debug: Programa testou se o diretório existe."
+fi
+
 if [[ -z $out_name ]]; then # checagem para ver se o user passou o nome do executável
     echo "Nome Do Executável Não Especificado!" >> $out_text
     echo "Erro na execução do comando build - Nome do executável não especificado!"
@@ -69,6 +107,10 @@ elif [[ "$out_name" == *.* ]]; then # checagem para ver se nome que o user passo
     echo "Nome Do Executável Não Pode Conter '.'" >> $out_text
     echo "Erro na execução do comando build - Nome do executável não pode conter '.'"
     exit 1
+fi
+
+if [[ $debug_mode == true ]]; then
+    echo "Debug: Programa testou se o nome do executável é válido." 
 fi
 
 if find "$program_folder" -type f -iname "*.c" | deep_compiler; then # procura todos os arquivos .c na pasta do projeto informada pelo usuário e executa o compilador avançado caso encontre arquivos
